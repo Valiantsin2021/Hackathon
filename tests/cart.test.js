@@ -1,10 +1,11 @@
 import { expect, test } from '@playwright/test'
-import fs from 'fs'
-const baseUrl = process.env.BASE_URL
-const user = JSON.parse(fs.readFileSync('fixtures/user.json', 'utf-8'))
+import { UserBuilder } from '@utils/dataFactory.js'
 
-test.describe.serial(`Cart`, () => {
+const baseUrl = process.env.BASE_URL
+
+test.describe(`Cart`, () => {
   test.beforeEach(async ({ request }) => {
+    const user = new UserBuilder().setDefaults().build()
     const headers = {
       'X-Task-Id': 'api-12'
     }
@@ -44,17 +45,6 @@ test.describe.serial(`Cart`, () => {
       const body = await response.json()
       expect(body.items.length).toBe(1)
       expect(body.items.find(i => i.item_uuid === process.env.GAME_ID)).toBeTruthy()
-    })
-  })
-  test.afterEach(async ({ request }) => {
-    await test.step(`DELETE user`, async () => {
-      const headers = {
-        'X-Task-Id': 'api-12'
-      }
-      const response = await request.delete(`${baseUrl}/users/${process.env.USER_ID_CART}`, {
-        headers
-      })
-      expect(response.status()).toBe(204)
     })
   })
   test('GET a cart, api-12', async ({ request }) => {

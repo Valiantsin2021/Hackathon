@@ -1,6 +1,11 @@
 
 ## The project is an implementation of test automation for the Hackathon.
 
+### Test run results can be found at:
+
+- dev - ```./report-dev.html```
+- prod - ```./report-prod.html```
+
 ### Bugs pendiing to find: 
 
 #### USERS 

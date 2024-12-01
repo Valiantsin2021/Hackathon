@@ -3,7 +3,7 @@ import fs from 'fs'
 const baseUrl = process.env.BASE_URL
 const user = JSON.parse(fs.readFileSync('fixtures/user.json', 'utf-8'))
 
-test.describe(`Orders`, () => {
+test.describe(`Payments`, () => {
   test.beforeEach(async ({ request }) => {
     const headers = {
       'X-Task-Id': 'api-19'
@@ -48,17 +48,6 @@ test.describe(`Orders`, () => {
       expect(body.total_price).toBe(+process.env.GAME_PRICE)
       expect(body.status).toBe('open')
       process.env.ORDER_ID = body.uuid
-    })
-  })
-  test.afterEach(async ({ request }) => {
-    await test.step(`DELETE user`, async () => {
-      const headers = {
-        'X-Task-Id': 'api-19'
-      }
-      const response = await request.delete(`${baseUrl}/users/${process.env.USER_ID_PAYMENTS}`, {
-        headers
-      })
-      expect(response.status()).toBe(204)
     })
   })
   test('GET a payment, api-19', async ({ request }) => {
