@@ -215,17 +215,33 @@ test.describe(`qa-playground: USERS scenarios`, () => {
   })
   test(`PATCH update user profile api-24`, async ({ request }) => {
     const updatedUser = new UserBuilder().setDefaults().build()
+    const user = new UserBuilder().setDefaults().build()
     const headers = {
       'X-Task-Id': 'api-24'
     }
-    let user
-    await test.step(`GET user to update`, async () => {
-      const response = await request.get(`${baseUrl}/users`, {
-        headers
+    await test.step(`POST new user`, async () => {
+      const response = await request.post(`${baseUrl}/users`, {
+        headers,
+        data: user
+      })
+      expect(response.status(), 'HTTP status code should be 200').toBe(200)
+      const body = await response.json()
+      expect(body.uuid).toBeDefined()
+      user.uuid = body.uuid
+      await asserUser(body, user)
+    })
+    await test.step(`POST login created user`, async () => {
+      const response = await request.post(`${baseUrl}/users/login`, {
+        headers,
+        data: {
+          email: user.email,
+          password: user.password
+        }
       })
       expect(response.status()).toBe(200)
       const body = await response.json()
-      user = body.users.at(0)
+      expect(body.uuid).toBeDefined()
+      await asserUser(body, user)
     })
     await test.step(`PATCH update user profile`, async () => {
       const response = await request.patch(`${baseUrl}/users/${user.uuid}`, {
@@ -235,24 +251,21 @@ test.describe(`qa-playground: USERS scenarios`, () => {
       expect(response.status()).toBe(200)
       const body = await response.json()
       expect(body.uuid).toBeDefined()
-      process.env.UPDATED_ID = body.uuid
+      updatedUser.uuid = body.uuid
       await asserUser(body, updatedUser)
     })
-    await test.step(`GET updated user`, async () => {
-      const response = await request.get(`${baseUrl}/users/${process.env.UPDATED_ID}`, {
-        headers
+    await test.step(`POST login updated user`, async () => {
+      const response = await request.post(`${baseUrl}/users/login`, {
+        headers,
+        data: {
+          email: updatedUser.email,
+          password: updatedUser.password
+        }
       })
       expect(response.status()).toBe(200)
       const body = await response.json()
+      expect(body.uuid).toBeDefined()
       await asserUser(body, updatedUser)
-    })
-    await test.step(`GET all users and verify updated user`, async () => {
-      const response = await request.get(`${baseUrl}/users`, { headers })
-      expect(response.status()).toBe(200)
-      const body = await response.json()
-      const user = body.users.find(u => u.uuid === process.env.UPDATED_ID)
-      expect(user).toBeDefined()
-      await asserUser(user, updatedUser)
     })
   })
 })

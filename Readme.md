@@ -8,10 +8,6 @@
 
 ### Bugs pendiing to find: 
 
-#### USERS 
-
-api-24
-
 #### Orders 
 
 API-16
