@@ -96,17 +96,19 @@ test.describe(`qa-playground: USERS scenarios`, () => {
     const headers = {
       'X-Task-Id': 'api-4'
     }
-    let user
+    let user1
+    let user2
     await test.step(`GET user to update`, async () => {
       const response = await request.get(`${baseUrl}/users`, {
         headers
       })
       expect(response.status()).toBe(200)
       const body = await response.json()
-      user = body.users[0]
+      user1 = body.users[0]
+      user2 = body.users[1]
     })
-    await test.step(`PATCH update user profile`, async () => {
-      const response = await request.patch(`${baseUrl}/users/${user.uuid}`, {
+    await test.step(`PATCH update user1 profile`, async () => {
+      const response = await request.patch(`${baseUrl}/users/${user1.uuid}`, {
         headers,
         data: updatedUser
       })
@@ -124,13 +126,14 @@ test.describe(`qa-playground: USERS scenarios`, () => {
       const body = await response.json()
       await asserUser(body, updatedUser)
     })
-    await test.step(`GET all users and verify updated user`, async () => {
-      const response = await request.get(`${baseUrl}/users`, { headers })
-      expect(response.status()).toBe(200)
+    await test.step('PATCH update user2 profile', async () => {
+      const response = await request.patch(`${baseUrl}/users/${user2.uuid}`, {
+        headers,
+        data: updatedUser
+      })
+      expect(response.status()).toBe(409)
       const body = await response.json()
-      const user = body.users.find(u => u.uuid === process.env.UPDATED_ID)
-      expect(user).toBeDefined()
-      await asserUser(user, updatedUser)
+      expect(body.message).toContain('User with the following "email" already exists:')
     })
   })
   test(`GET list all users api-6`, async ({ request }) => {
@@ -203,13 +206,11 @@ test.describe(`qa-playground: USERS scenarios`, () => {
       user = body.users[0]
     })
     await test.step(`GET user by uuid`, async () => {
-      const response = await request.get(`${baseUrl}/users/${user.uuid}`, {
+      const changedId = user.uuid.slice(0, -2) + 'a1'
+      const response = await request.get(`${baseUrl}/users/${changedId}`, {
         headers
       })
-      expect(response.status()).toBe(200)
-      const body = await response.json()
-      expect(body.uuid).toBe(user.uuid)
-      await asserUser(body, user)
+      expect(response.status(), 'HTTP status code should be 404').toBe(404)
     })
   })
   test(`PATCH update user profile api-24`, async ({ request }) => {
