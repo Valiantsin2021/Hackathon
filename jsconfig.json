@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "es2022",
+    "checkJs": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@fixtures/*": ["fixtures/*"],
+      "@utils/*": ["utils/*"]
+    }
+  },
+  "include": ["."],
+  "exclude": ["node_modules"]
+}

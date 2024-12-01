@@ -1,0 +1,5 @@
+node_modules/
+report
+playwright-report
+package-lock.json
+Readme.md
