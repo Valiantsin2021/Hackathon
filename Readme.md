@@ -5,6 +5,7 @@
 
 - dev - ```./report-dev.html```
 - prod - ```./report-prod.html```
+- video - https://youtu.be/d31sYHmsEvE
 
 ### Bugs pendiing to find: 
 
