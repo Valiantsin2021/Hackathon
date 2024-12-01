@@ -29,20 +29,47 @@ test.describe(`Orders`, () => {
       process.env.GAME_PRICE = gamePrice
     })
   })
-  // test.afterEach(async ({ request }) => {
-  //   await test.step(`DELETE user`, async () => {
-  //     const headers = {
-  //       'X-Task-Id': 'api-16'
-  //     }
-  //     const response = await request.delete(`${baseUrl}/users/${process.env.USER_ID_ORDERS}`, {
-  //       headers
-  //     })
-  //     expect(response.status()).toBe(204)
-  //   })
-  // })
-  test('POST Create a new order, api-16,api-17', async ({ request }) => {
+  test('POST Create a new order, api-16', async ({ request }) => {
     const headers = {
       'X-Task-Id': 'api-16'
+    }
+    const data = {
+      items: [
+        {
+          item_uuid: process.env.GAME_ID,
+          quantity: 1
+        }
+      ]
+    }
+    await test.step(`POST creates a new order`, async () => {
+      const response = await request.post(`${baseUrl}/users/${process.env.USER_ID_ORDERS}/orders`, { headers, data })
+      expect(response.status()).toBe(200)
+      const body = await response.json()
+      expect(body.uuid).toBeDefined()
+      expect(body.items.length).toBe(1)
+      expect(body.items.find(i => i.item_uuid === process.env.GAME_ID)).toBeTruthy()
+      expect(body.items[0].quantity).toBe(data.items[0].quantity)
+      expect(body.items[0].total_price).toBe(+process.env.GAME_PRICE)
+      expect(body.total_price).toBe(+process.env.GAME_PRICE)
+      expect(body.status).toBe('open')
+    })
+    await test.step(`GET list user orders`, async () => {
+      const response = await request.get(`${baseUrl}/users/${process.env.USER_ID_ORDERS}/orders`, { headers })
+      expect(response.status()).toBe(200)
+      const body = await response.json()
+      expect(body.orders.length).toBe(1)
+      expect(body.orders[0].uuid).toBeDefined()
+      expect(body.orders[0].items.length).toBe(1)
+      expect(body.orders[0].items.find(i => i.item_uuid === process.env.GAME_ID)).toBeTruthy()
+      expect(body.orders[0].items[0].quantity).toBe(data.items[0].quantity)
+      expect(body.orders[0].items[0].total_price).toBe(+process.env.GAME_PRICE)
+      expect(body.orders[0].total_price).toBe(+process.env.GAME_PRICE)
+      expect(body.orders[0].status).toBe('open')
+    })
+  })
+  test('POST Create a new order, api-17', async ({ request }) => {
+    const headers = {
+      'X-Task-Id': 'api-17'
     }
     const data = {
       items: [
