@@ -42,7 +42,7 @@ test.describe.serial(`Orders`, () => {
   })
   test('POST Create a new order, api-16,api-17', async ({ request }) => {
     const headers = {
-      'X-Task-Id': 'api-17'
+      'X-Task-Id': 'api-16'
     }
     const data = {
       items: [
@@ -56,6 +56,7 @@ test.describe.serial(`Orders`, () => {
       const response = await request.post(`${baseUrl}/users/${process.env.USER_ID_ORDERS}/orders`, { headers, data })
       expect(response.status()).toBe(200)
       const body = await response.json()
+      console.log(JSON.stringify(body, null, 2))
       expect(body.uuid).toBeDefined()
       expect(body.items.length).toBe(1)
       expect(body.items.find(i => i.item_uuid === process.env.GAME_ID)).toBeTruthy()
@@ -68,6 +69,7 @@ test.describe.serial(`Orders`, () => {
       const response = await request.get(`${baseUrl}/users/${process.env.USER_ID_ORDERS}/orders`, { headers })
       expect(response.status()).toBe(200)
       const body = await response.json()
+      console.log(JSON.stringify(body, null, 2))
       expect(body.orders.length).toBe(1)
       expect(body.orders[0].uuid).toBeDefined()
       expect(body.orders[0].items.length).toBe(1)
