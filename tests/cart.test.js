@@ -3,7 +3,7 @@ import fs from 'fs'
 const baseUrl = process.env.BASE_URL
 const user = JSON.parse(fs.readFileSync('fixtures/user.json', 'utf-8'))
 
-test.describe(`Cart`, () => {
+test.describe.serial(`Cart`, () => {
   test.beforeEach(async ({ request }) => {
     const headers = {
       'X-Task-Id': 'api-12'

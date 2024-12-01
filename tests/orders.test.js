@@ -1,14 +1,14 @@
 import { expect, test } from '@playwright/test'
-import fs from 'fs'
+import { UserBuilder } from '@utils/dataFactory.js'
 const baseUrl = process.env.BASE_URL
-const user = JSON.parse(fs.readFileSync('fixtures/user.json', 'utf-8'))
 
-test.describe(`Orders`, () => {
+test.describe.serial(`Orders`, () => {
   test.beforeEach(async ({ request }) => {
     const headers = {
       'X-Task-Id': 'api-16'
     }
     await test.step(`POST new user`, async () => {
+      const user = new UserBuilder().setDefaults().build()
       const response = await request.post(`${baseUrl}/users`, {
         headers,
         data: user
@@ -56,7 +56,6 @@ test.describe(`Orders`, () => {
       const response = await request.post(`${baseUrl}/users/${process.env.USER_ID_ORDERS}/orders`, { headers, data })
       expect(response.status()).toBe(200)
       const body = await response.json()
-      console.log(JSON.stringify(body, null, 2))
       expect(body.uuid).toBeDefined()
       expect(body.items.length).toBe(1)
       expect(body.items.find(i => i.item_uuid === process.env.GAME_ID)).toBeTruthy()
@@ -69,7 +68,6 @@ test.describe(`Orders`, () => {
       const response = await request.get(`${baseUrl}/users/${process.env.USER_ID_ORDERS}/orders`, { headers })
       expect(response.status()).toBe(200)
       const body = await response.json()
-      console.log(JSON.stringify(body, null, 2))
       expect(body.orders.length).toBe(1)
       expect(body.orders[0].uuid).toBeDefined()
       expect(body.orders[0].items.length).toBe(1)

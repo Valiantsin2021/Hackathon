@@ -1,6 +1,42 @@
-🦖 The QA Hackathon has started — Twitch opening is LIVE NOW! 
 
-@everyone 
+## The project is an implementation of test automation for the Hackathon.
+
+### Bugs pendiing to find: 
+
+#### USERS 
+
+api-24
+
+#### Orders 
+
+API-16
+
+API-17
+
+#### PAYMENT 
+
+API-19
+
+API-20
+
+
+## Project setup 
+
+You have to have NodeJS and Java installed.
+
+clone the repo
+
+```npm install```
+
+set the desired ENV in the .env file
+
+set the TOKEN in the .env file
+
+```npm run test```
+
+The allure report will be generated at the end of the tests run in the forlder ``report/allure-report``
+
+## Project description
 
 ⏰ Key Dates:
 Start: Nov 29, 18:00 UTC ← We're here now

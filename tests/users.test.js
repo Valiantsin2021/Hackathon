@@ -8,7 +8,7 @@ const asserUser = async (body, user) => {
   expect(body.name).toBe(user.name)
   expect(body.nickname).toBe(user.nickname)
 }
-test.describe(`qa-playground: USERS scenarios`, () => {
+test.describe.serial(`qa-playground: USERS scenarios`, () => {
   test('DELETE existing user, api-1', async ({ request }) => {
     const headers = {
       'X-Task-Id': 'api-1'

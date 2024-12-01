@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "npx playwright test --project=api-tests",
+    "test": "sh ./test.sh",
     "posttest": "echo \"⌚ Saving the allure report\" && allure generate ./allure-results --single-file --clean -o ./report/allure-report && echo \"⌚ Allure report saved in ./report/allure-report folder\"",
     "format": "prettier --write --cache .",
     "lint": "eslint --fix",
